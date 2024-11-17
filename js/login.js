@@ -14,7 +14,7 @@ continueBtn.onclick = () => {
     let xhr = new XMLHttpRequest();
 
     // Initialize a POST request to the login PHP script
-    xhr.open("POST", "../php/login.php", true);
+    xhr.open("POST", "../ChatAppGit/php/login.php", true);
 
     // Define what happens when the response is received
     xhr.onload = () => {
@@ -24,7 +24,7 @@ continueBtn.onclick = () => {
 
                 // Check the response for success or error
                 if (data === "success") {
-                    location.href = "../users.php"; // Redirect to the users page on success
+                    location.href = "../ChatAppGit/users.php"; // Redirect to the users page on success
                 } else {
                     // Display the error message returned from the server
                     errorText.style.display = "block"; // Make the error text visible

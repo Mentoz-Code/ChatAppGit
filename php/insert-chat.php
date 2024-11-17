@@ -27,7 +27,7 @@ if (isset($_SESSION['unique_id'])) {
     }
 } else {
     // Redirect to login if session is not set
-    header("location: ../login.php");
+    header("location: ../ChatAppGit/login.php");
     exit();
 }
 ?>

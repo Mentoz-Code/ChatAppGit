@@ -14,15 +14,15 @@ continueBtn.onclick = () => {
     let xhr = new XMLHttpRequest();
 
     // Initialize a POST request to the signup PHP script
-    xhr.open("POST", "../php/signup.php", true);
+    xhr.open("POST", "../ChatAppGit/php/signup.php", true);
 
     // Define what happens when the request is loaded
     xhr.onload = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) { // Ensure request is complete
             if (xhr.status === 200) { // Check for successful response
                 let data = xhr.response.trim(); // Get and trim response data
-                if (data === "Success") {
-                    location.href = "../users.php"; // Redirect to the users page
+                if (data === "success") {
+                    location.href = "../ChatAppGit/php/users.php"; // Redirect to the users page
                 } else {
                     errorText.style.display = "block"; // Show error text
                     errorText.textContent = data; // Set error message

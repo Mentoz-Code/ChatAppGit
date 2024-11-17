@@ -16,10 +16,10 @@ if(isset($_SESSION['unique_id'])) {
             header("location: ../login.php");
         }
     } else {
-        header("location: ../users.php");
+        header("location: ../ChatAppGit/users.php");
     }
 } else {
-    header("location: ../login.php");
+    header("location: ../ChatAppGit/login.php");
 }
 
 ?>
