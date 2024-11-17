@@ -1,55 +1,58 @@
 <?php
+// Iterate through each user row from the previous query
+while ($row = mysqli_fetch_assoc($query)) {
+    // Use a prepared statement to fetch the last message securely
+    $stmt = $conn->prepare("
+        SELECT msg, outgoing_msg_id 
+        FROM messages 
+        WHERE 
+            (incoming_msg_id = ? OR outgoing_msg_id = ?) 
+            AND (outgoing_msg_id = ? OR incoming_msg_id = ?) 
+        ORDER BY msg_id DESC 
+        LIMIT 1
+    ");
+    $stmt->bind_param("iiii", $row['unique_id'], $row['unique_id'], $outgoing_id, $outgoing_id);
+    $stmt->execute();
+    $result2 = $stmt->get_result();
+    $row2 = $result2->fetch_assoc();
 
-    while($row = mysqli_fetch_assoc($query)) {
-        $sql2 = "SELECT * FROM messages WHERE (incoming_msg_id = {$row['unique_id']} OR outgoing_msg_id = {$row['unique_id']} AND outgoing_msg_id = {$outgoing_id} OR incoming_msg_id = {$outgoing_id}) ORDER BY msg_id DESC LIMIT 1";
-
-        $query2 = mysqli_query($conn, $sql2);
-        $row2 = mysqli_fetch_assoc($query2);
-
-        if(mysqli_num_rows($query2) > 0) {
-            $result = $row2['msg'];
-        } else {
-            $result = "No new messages";
-        }
-
-        if(strlen($result) > 28) {
-            $msg = substr($result, 0, 28) . '...';
-        } else {
-            $msg = $result;
-        }
-
-        if(isset($row['outgoing_msg_id'])) {
-            if($outgoing_id === $row2['outgoing_msg_id']) {
-                $you = "You: ";
-            } else {
-                $you = "";
-            }
-        } else {
-            $you = "";
-        }
-
-        if($row['status'] === "Offline") {
-            $offline = "offline";
-        } else {
-            $offline = "";
-        }
-
-        if($outgoing_id === $row['unique_id']) {
-            $hide_me = "hide";
-        } else {
-            $hide_me = "";
-        }
-
-        $output .= '<a href="chat.php?user_id='.$row['unique_id'].'">
-        <div class="content">
-            <img src="php/images/'.$row['img'].'" alt="">
-            <div class="details">
-                <span>'. $row['fname'] . " " . $row['lname'] . '</span>
-                <p>' . $you . $msg . '</p>
-            </div>
-        </div>
-        <div class="status-dot '.$offline.' "><i class="fas fa-circle"></i></div>
-        </a>';
+    // Determine the message to display
+    if ($result2->num_rows > 0) {
+        $result = $row2['msg'];
+    } else {
+        $result = "No new messages";
     }
 
+    // Truncate the message if it exceeds 28 characters
+    $msg = strlen($result) > 28 ? substr($result, 0, 28) . '...' : $result;
+
+    // Add "You: " prefix if the message is sent by the current user
+    $you = (isset($row2['outgoing_msg_id']) && $outgoing_id === $row2['outgoing_msg_id']) ? "You: " : "";
+
+    // Determine if the user is offline
+    $offline = ($row['status'] === "Offline") ? "offline" : "";
+
+    // Hide the current user's entry in the list
+    $hide_me = ($outgoing_id === $row['unique_id']) ? "hide" : "";
+
+    // Safely escape user details for output
+    $fname = htmlspecialchars($row['fname']);
+    $lname = htmlspecialchars($row['lname']);
+    $img = htmlspecialchars($row['img']);
+    $user_id = htmlspecialchars($row['unique_id']);
+
+    // Append the user card to the output
+    $output .= '
+        <a href="chat.php?user_id=' . $user_id . '" class="' . $hide_me . '">
+            <div class="content">
+                <img src="php/images/' . $img . '" alt="Profile Picture">
+                <div class="details">
+                    <span>' . $fname . ' ' . $lname . '</span>
+                    <p>' . $you . htmlspecialchars($msg) . '</p>
+                </div>
+            </div>
+            <div class="status-dot ' . $offline . '"><i class="fas fa-circle"></i></div>
+        </a>
+    ';
+}
 ?>
