@@ -52,7 +52,7 @@ searchBar.onkeyup = () => {
         // Set headers and send the request with the search term
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.send(`searchTerm=${encodeURIComponent(searchTerm)}`);
-    }, 300); // Debounce delay
+    }, 1000); // Debounce delay
 };
 
 // Periodically update the users list if no search is active
@@ -77,4 +77,4 @@ setInterval(() => {
 
         xhr.send();
     }
-}, 500); // Polling interval
+}, 1000); // Polling interval

@@ -57,10 +57,10 @@ include_once "header.php";
                 <!-- Messages will be dynamically loaded via JavaScript -->
             </div>
 
-            <form action="#" class="typing-area">
+            <form action="#" class="typing-area" style="margin: 5px;" >
                 <input type="hidden" name="incoming_id" class="incoming_id" value="<?php echo $user_id; ?>">
-                <input type="text" name="message" class="input-field" placeholder="Type message here..." autocomplete="off">
-                <button><i class="fab fa-telegram-plane"></i></button>
+                <input type="text" name="message" class="input-field" placeholder="Type message here..." autocomplete="off" style="width: calc(100% - 55px);" >
+                <input type="button" class="send" value="Send" style="width: 55px; font-size: 13px;" />
             </form>
         </section>
     </div>

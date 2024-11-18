@@ -2,7 +2,7 @@
 const form = document.querySelector(".typing-area");
 const incoming_id = form.querySelector(".incoming_id").value;
 const inputField = form.querySelector(".input-field");
-const sendBtn = form.querySelector("button");
+const sendBtn = form.querySelector('input[type="button"]');
 const chatBox = document.querySelector(".chat-box");
 
 // Prevent form submission
@@ -66,7 +66,7 @@ setInterval(() => {
     const formData = new FormData();
     formData.append("incoming_id", incoming_id); // Use the existing incoming_id variable
     xhr.send(formData);
-}, 500);
+}, 1500);
 
 // Scroll to the bottom of the chat box
 function scrollToBottom() {
