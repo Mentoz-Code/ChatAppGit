@@ -6,20 +6,21 @@ const usersList = document.querySelector(".users-list");
 // Toggle search bar visibility and clear input when the icon is clicked
 searchIcon.onclick = () => {
     searchBar.classList.toggle("show");
+    searchBar.style.opacity = '100';
     searchIcon.classList.toggle("active");
     searchBar.focus();
 
-    if (searchBar.classList.contains("active")) {
+    /* if (searchBar.classList.contains("active")) {
         searchBar.value = "";
         searchBar.classList.remove("active");
-    }
+    } */
 };
 
 // Debounce timer for search input
 let debounceTimer;
 
 searchBar.onkeyup = () => {
-    const searchTerm = searchBar.value.trim(); // Trim whitespace for cleaner input
+    let searchTerm = searchBar.value.trim(); // Trim whitespace for cleaner input
 
     // Add or remove active class based on input
     if (searchTerm !== "") {
@@ -34,6 +35,7 @@ searchBar.onkeyup = () => {
         // Send search request to the server
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "../ChatAppGit/php/search.php", true);
+        xhr.responseType = 'document';
 
         xhr.onload = () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -50,13 +52,14 @@ searchBar.onkeyup = () => {
         xhr.onerror = () => console.error("An error occurred during the XMLHttpRequest.");
 
         // Set headers and send the request with the search term
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send(`searchTerm=${encodeURIComponent(searchTerm)}`);
-    }, 1000); // Debounce delay
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("searchTerm=" + searchTerm);
+    }, 300); // Debounce delay
 };
 
 // Periodically update the users list if no search is active
 setInterval(() => {
+    return;
     if (!searchBar.classList.contains("active")) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "../ChatAppGit/php/users.php", true);

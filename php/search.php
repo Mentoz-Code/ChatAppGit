@@ -24,20 +24,25 @@ $searchTerm = trim($_POST['searchTerm']);
 
 try {
     // Use a prepared statement to securely search for users
-    $stmt = $conn->prepare("
-        SELECT * FROM users 
-        WHERE NOT unique_id = ? 
-        AND (fname LIKE CONCAT('%', ?, '%') OR lname LIKE CONCAT('%', ?, '%'))
-    ");
-    $stmt->bind_param("iss", $outgoing_id, $searchTerm, $searchTerm);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $query = "SELECT * FROM `users` WHERE NOT `unique_id` = '{$outgoing_id}' AND (`fname` LIKE '%$searchTerm%' OR `lname` LIKE '{$searchTerm}')";
+    $result = mysqli_query($conn,$query);
+
+    // $stmt = $conn->prepare("
+    //     SELECT * FROM users 
+    //     WHERE NOT unique_id = ? 
+    //     AND (fname LIKE CONCAT('%', ?, '%') OR lname LIKE CONCAT('%', ?, '%'))
+    // ");
+    // $stmt->bind_param("iss", $outgoing_id, $searchTerm, $searchTerm);
+    // $stmt->execute();
+    // echo $stmt;//llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+    // return;
+    //$result = $stmt->get_result();
 
     // Initialize output
     $output = "";
 
     if ($result->num_rows > 0) {
-        // Include data.php to display user data dynamically
+        // Pass the result to data.php for rendering
         include_once "data.php";
     } else {
         // Handle no results case
@@ -45,7 +50,7 @@ try {
     }
 
     // Return the output
-    echo htmlspecialchars($output);
+    echo ($output);
 
 } catch (Exception $e) {
     // Log and handle errors gracefully
